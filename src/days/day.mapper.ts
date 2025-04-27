@@ -1,0 +1,25 @@
+/*eslint-disable*/
+import { DayDto } from './day.dto';
+import { DayEntity } from './day.entity';
+
+export class DayMapper {
+  async dtoToEntity(dayDTO: DayDto): Promise<DayEntity> {
+    const dayEntity = new DayEntity(
+      dayDTO.dayId,
+      dayDTO.startLocation,
+      dayDTO.endLocation,
+      dayDTO.description,
+    );
+
+    return dayEntity;
+  }
+
+  entityToDto(entity: DayEntity): DayDto {
+    return new DayDto(
+      entity.dayId,
+      entity.startLocation,
+      entity.endLocation,
+      entity.description,
+    );
+  }
+}
