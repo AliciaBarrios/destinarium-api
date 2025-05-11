@@ -41,7 +41,7 @@ export class ItineraryDto {
   readonly budget: number;
 
   @ApiProperty()
-  readonly coverImage: string;
+  readonly coverImage?: string;
 
   @ApiProperty()
   readonly userAlias?: string;

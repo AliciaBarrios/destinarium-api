@@ -3,6 +3,9 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { TypeOrmExceptionFilter } from './filters/type-orm-exception.filter';
 import { ValidationPipe } from '@nestjs/common';
+import { json } from 'body-parser';
+import { join } from 'path';
+import * as express from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
@@ -26,6 +29,8 @@ async function bootstrap() {
 
   app.useGlobalFilters(new TypeOrmExceptionFilter());
   app.useGlobalPipes(new ValidationPipe({ whitelist: false }));
+  app.use(json({ limit: '10mb' }));
+  app.use('/uploads', express.static(join(process.cwd(), 'uploads')));
 
   const document = SwaggerModule.createDocument(app, options);
 

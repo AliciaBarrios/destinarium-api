@@ -8,7 +8,9 @@ import {
   Param,
   Post,
   Put,
-  UseGuards
+  UseGuards,
+  UseInterceptors,
+  UploadedFile
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth } from '@nestjs/swagger';
@@ -16,10 +18,15 @@ import { DeleteResult } from 'typeorm';
 import { ItineraryDto } from './itinerary.dto';
 import { ItinerariesService } from './itineraries.service';
 import { ValidItineraryIdPipe } from './pipes/valid-itinerary-id.pipe';
+import { ImageService } from 'src/images/image.service';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('itineraries')
 export class ItinerariesController {
-  constructor(private readonly itineraryService: ItinerariesService) {}
+  constructor(
+    private readonly itineraryService: ItinerariesService,
+    private readonly imageService: ImageService
+  ) {}
 
   @Get()
   async getAllItineraries(): Promise<ItineraryDto[]> {
@@ -58,8 +65,26 @@ export class ItinerariesController {
   @Post()
   @ApiBearerAuth('access_token')
   @UseGuards(AuthGuard('jwt'))
-  async newItinerary(@Body() itinerary: ItineraryDto): Promise<ItineraryDto> {
-    return await this.itineraryService.newItinerary(itinerary);
+  @UseInterceptors(FileInterceptor('coverImage')) // new
+  async newItinerary(
+    @Body() itinerary: ItineraryDto,
+    @UploadedFile() file?: Express.Multer.File, // new
+  ): Promise<ItineraryDto> {
+    let imageFileName: string | undefined;
+
+    // Si se ha subido una imagen, se procesa y se guarda
+    if (file) {
+      imageFileName = await this.imageService.processAndSaveImage(file);
+    }
+
+    // Creamos el DTO final con la imagen procesada (si existe)
+    const itineraryDto: ItineraryDto = {
+      ...itinerary,
+      coverImage: imageFileName, // Añadimos el nombre de la imagen procesada
+    };
+
+
+    return await this.itineraryService.newItinerary(itineraryDto);
   }
 
   @Put(':id')
