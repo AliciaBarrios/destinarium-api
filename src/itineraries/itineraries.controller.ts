@@ -20,6 +20,7 @@ import { ItinerariesService } from './itineraries.service';
 import { ValidItineraryIdPipe } from './pipes/valid-itinerary-id.pipe';
 import { ImageService } from 'src/images/image.service';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
 
 @Controller('itineraries')
 export class ItinerariesController {
@@ -65,26 +66,22 @@ export class ItinerariesController {
   @Post()
   @ApiBearerAuth('access_token')
   @UseGuards(AuthGuard('jwt'))
-  @UseInterceptors(FileInterceptor('coverImage')) // new
-  async newItinerary(
-    @Body() itinerary: ItineraryDto,
-    @UploadedFile() file?: Express.Multer.File, // new
-  ): Promise<ItineraryDto> {
-    let imageFileName: string | undefined;
+  async newItinerary(@Body() itinerary: ItineraryDto): Promise<ItineraryDto> {
+    return await this.itineraryService.newItinerary(itinerary);
+  }
 
-    // Si se ha subido una imagen, se procesa y se guarda
-    if (file) {
-      imageFileName = await this.imageService.processAndSaveImage(file);
-    }
-
-    // Creamos el DTO final con la imagen procesada (si existe)
-    const itineraryDto: ItineraryDto = {
-      ...itinerary,
-      coverImage: imageFileName, // Añadimos el nombre de la imagen procesada
-    };
-
-
-    return await this.itineraryService.newItinerary(itineraryDto);
+  @Post('upload-image')
+  @UseInterceptors(FileInterceptor('coverImage', {
+    storage: diskStorage({
+      destination: './uploads',
+      filename: (req, file, cb) => {
+        const filename = `${Date.now()}-${file.originalname}`;
+        cb(null, filename);
+      },
+    }),
+  }))
+  uploadImage(@UploadedFile() file: Express.Multer.File) {
+    return { fileName: file.filename };
   }
 
   @Put(':id')

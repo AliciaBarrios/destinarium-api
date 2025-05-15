@@ -8,7 +8,7 @@ import { join } from 'path';
 import * as express from 'express';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { cors: true });
+  const app = await NestFactory.create(AppModule);
 
   const options = new DocumentBuilder()
     .setTitle('Project UOC BLOG 2021-2022')
@@ -31,6 +31,10 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ whitelist: false }));
   app.use(json({ limit: '10mb' }));
   app.use('/uploads', express.static(join(process.cwd(), 'uploads')));
+  app.enableCors({
+    origin: 'http://http://localhost:4200',
+    credentials: true,
+  });
 
   const document = SwaggerModule.createDocument(app, options);
 
