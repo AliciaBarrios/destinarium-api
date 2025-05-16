@@ -32,8 +32,8 @@ export class DaysController {
   }
 
   @Post()
-  async newDay(@Body() day: DayDto): Promise<DayDto> {
-    return await this.dayService.newDay(day);
+  async newDays(@Body() days: DayDto[]): Promise<DayDto[]> {
+    return await this.dayService.newDays(days);
   }
 
   @Put(':id')

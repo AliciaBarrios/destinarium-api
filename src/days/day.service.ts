@@ -28,9 +28,9 @@ export class DayService {
     return days.map((day) => this.mapper.entityToDto(day));
   }
 
-  async newDay(dayDTO: DayDto): Promise<DayDto> {
-    const newDay: DayEntity = await this.daysRepository.newDay(dayDTO);
-    return this.mapper.entityToDto(newDay);
+  async newDays(daysDTO: DayDto[]): Promise<DayDto[]> {
+    const newDaysEntities: DayEntity[] = await this.daysRepository.newDays(daysDTO);
+    return newDaysEntities.map(dayEntity => this.mapper.entityToDto(dayEntity));
   }
 
   async updateDay(id: string, dayDTO: DayDto): Promise<DayDto> {

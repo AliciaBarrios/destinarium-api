@@ -33,9 +33,9 @@ export class DayRepository {
   });
 }
 
-  async newDay(dayDTO: DayDto): Promise<DayEntity> { 
-    const newDay = await this.mapper.dtoToEntity(dayDTO); 
-    return this.daysRepository.save(newDay); 
+  async newDays(daysDTO: DayDto[]): Promise<DayEntity[]> { 
+    const newDays = await Promise.all(daysDTO.map(dto => this.mapper.dtoToEntity(dto)));
+    return this.daysRepository.save(newDays); 
   }
 
   async updateDay(id: string, dayDTO: DayDto): Promise<DayEntity> {
