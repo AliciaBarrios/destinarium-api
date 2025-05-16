@@ -11,6 +11,10 @@ export class DayMapper {
       dayDTO.description,
     );
 
+    if (dayDTO.itineraryId) {
+      dayEntity.itineraryId = dayDTO.itineraryId;
+    }
+
     return dayEntity;
   }
 

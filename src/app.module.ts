@@ -6,6 +6,7 @@ import { AuthModule } from './auth/auth.module';
 import { CategoriesModule } from './categories/categories.module';
 import { ItinerariesModule } from './itineraries/itineraries.module';
 import { UsersModule } from './users/users.module';
+import { DayModule } from './days/day.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { UsersModule } from './users/users.module';
     CategoriesModule,
     ItinerariesModule,
     AuthModule,
+    DayModule,
   ],
   controllers: [AppController],
   providers: [AppService],

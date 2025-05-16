@@ -32,7 +32,7 @@ async function bootstrap() {
   app.use(json({ limit: '10mb' }));
   app.use('/uploads', express.static(join(process.cwd(), 'uploads')));
   app.enableCors({
-    origin: 'http://http://localhost:4200',
+    origin: 'http://localhost:4200',
     credentials: true,
   });
 

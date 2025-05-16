@@ -1,7 +1,7 @@
 /*eslint-disable*/
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, DeleteResult } from 'typeorm';
 import { DayEntity } from './day.entity';
 import { DayDto } from './day.dto';
 import { DayMapper } from './day.mapper';
@@ -14,9 +14,15 @@ export class DayRepository {
     private mapper: DayMapper,
   ) {}
 
+  async getAllDays(): Promise<DayEntity[]> {
+    return await this.daysRepository.find({
+      relations: ['itinerary'],
+    });
+  }
+
   async getDayById(id: string): Promise<DayEntity> {
     return this.daysRepository.findOne(id, {
-      relations: ['itinerary', 'transports', 'restaurants', 'accommodations', 'interestPoints'],
+      relations: ['itinerary'],
     });
   }
 
@@ -25,8 +31,17 @@ export class DayRepository {
     return this.daysRepository.save(newDay); 
   }
 
-  async deleteDay(id: string): Promise<void> {
-    await this.daysRepository.delete(id);
+  async updateDay(id: string, dayDTO: DayDto): Promise<DayEntity> {
+    const existingDay = await this.daysRepository.findOne(id);
+    if (!existingDay) {
+      throw new Error('Día no encontrado');
+    }
+
+    const updatedDay = this.daysRepository.merge(existingDay, await this.mapper.dtoToEntity(dayDTO));
+    return await this.daysRepository.save(updatedDay);
   }
 
+  deleteDay(id: string): Promise<DeleteResult> {
+    return this.daysRepository.delete(id);
+  }
 }
