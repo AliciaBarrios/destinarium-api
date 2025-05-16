@@ -9,6 +9,7 @@ export class DayMapper {
       dayDTO.startLocation,
       dayDTO.endLocation,
       dayDTO.description,
+      dayDTO.dayNumber,
     );
 
     if (dayDTO.itineraryId) {
@@ -24,6 +25,7 @@ export class DayMapper {
       entity.startLocation,
       entity.endLocation,
       entity.description,
+      entity.dayNumber,
     );
   }
 }

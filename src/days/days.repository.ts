@@ -26,6 +26,13 @@ export class DayRepository {
     });
   }
 
+  async getDaysByItineraryId(itineraryId: string): Promise<DayEntity[]> {
+  return this.daysRepository.find({
+    where: { itineraryId },
+    order: { dayNumber: 'ASC' } 
+  });
+}
+
   async newDay(dayDTO: DayDto): Promise<DayEntity> { 
     const newDay = await this.mapper.dtoToEntity(dayDTO); 
     return this.daysRepository.save(newDay); 

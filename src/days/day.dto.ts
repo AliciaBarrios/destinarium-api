@@ -14,6 +14,9 @@ export class DayDto {
   @ApiProperty()
   readonly description: string;
 
+  @ApiProperty()
+  readonly dayNumber?: number;
+
   @ApiProperty({ required: false })
   readonly itineraryId?: string;
 
@@ -22,12 +25,14 @@ export class DayDto {
     startLocation: string,
     endLocation: string,
     description: string,
+    dayNumber?: number,
     itineraryId?: string,
   ) {
     this.dayId = dayId;
     this.startLocation = startLocation;
     this.endLocation = endLocation;
     this.description = description;
+    this.dayNumber = dayNumber;
     this.itineraryId = itineraryId;
   }
 }

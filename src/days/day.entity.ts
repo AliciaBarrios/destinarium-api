@@ -23,6 +23,9 @@ export class DayEntity extends BaseEntity {
   @Column()
   description: string;
 
+  @Column()
+  dayNumber: number;
+
   @ManyToOne(() => ItineraryEntity, (itinerary) => itinerary.days, {
     onDelete: 'CASCADE',
   })
@@ -37,13 +40,13 @@ export class DayEntity extends BaseEntity {
     startLocation: string,
     endLocation: string,
     description: string,
-    // itinerary: ItineraryEntity,
+    dayNumber: number,
   ) {
     super();
     this.dayId = dayId;
     this.startLocation = startLocation;
     this.endLocation = endLocation;
     this.description = description;
-    // this.itinerary = itinerary;
+    this.dayNumber = dayNumber;
   }
 }

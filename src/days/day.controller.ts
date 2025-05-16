@@ -26,6 +26,11 @@ export class DaysController {
     return await this.dayService.getDayById(id);
   }
 
+  @Get('by-itinerary/:itineraryId')
+  async getDaysByItineraryId(@Param('itineraryId') itineraryId: string): Promise<DayDto[]> {
+    return await this.dayService.getDaysByItineraryId(itineraryId);
+  }
+
   @Post()
   async newDay(@Body() day: DayDto): Promise<DayDto> {
     return await this.dayService.newDay(day);

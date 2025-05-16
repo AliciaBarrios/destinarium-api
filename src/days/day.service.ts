@@ -23,6 +23,11 @@ export class DayService {
     return this.mapper.entityToDto(day);
   }
 
+  async getDaysByItineraryId(itineraryId: string): Promise<DayDto[]> {
+    const days: DayEntity[] = await this.daysRepository.getDaysByItineraryId(itineraryId);
+    return days.map((day) => this.mapper.entityToDto(day));
+  }
+
   async newDay(dayDTO: DayDto): Promise<DayDto> {
     const newDay: DayEntity = await this.daysRepository.newDay(dayDTO);
     return this.mapper.entityToDto(newDay);
