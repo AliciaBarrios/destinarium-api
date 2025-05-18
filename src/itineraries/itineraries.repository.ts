@@ -134,8 +134,8 @@ export class ItiinerariesRepository {
       itineraryDto.budget,
       itineraryDto.coverImage,
       itineraryDto.transports,
-      itineraryDto.restaurants,
       itineraryDto.accommodations,
+      itineraryDto.restaurants,
       itineraryDto.categories,
       itineraryDto.days,
     );

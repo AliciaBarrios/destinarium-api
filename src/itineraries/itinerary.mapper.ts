@@ -39,17 +39,17 @@ export class ItineraryMapper {
           ),
         )
       : [];
-    const accommodations = itineraryDTO.accommodations
-      ? await AccommodationEntity.findByIds(
-          itineraryDTO.accommodations.map(
-            (accommodation: AccommodationDto) => accommodation,
-          ),
-        )
-      : [];
     const restaurants = itineraryDTO.restaurants
       ? await RestaurantEntity.findByIds(
           itineraryDTO.restaurants.map(
             (restaurant: RestaurantDto) => restaurant,
+          ),
+        )
+      : [];
+    const accommodations = itineraryDTO.accommodations
+      ? await AccommodationEntity.findByIds(
+          itineraryDTO.accommodations.map(
+            (accommodation: AccommodationDto) => accommodation,
           ),
         )
       : [];
@@ -99,8 +99,8 @@ export class ItineraryMapper {
       itineraryEntity.budget,
       itineraryEntity.coverImage,
       transports,
-      restaurants,
       accommodations,
+      restaurants,
       categories,
       days,
     );
@@ -114,8 +114,6 @@ export class ItineraryMapper {
         new CategoryDto(
           category.categoryId,
           category.title,
-          // category.description,
-          // category.itineraries?.map(it => it.itineraryId) ?? []
         ),
     );
   }
@@ -156,10 +154,9 @@ export class ItineraryMapper {
         new AccommodationDto(
           accommodation.accommodationId,
           accommodation.name,
-          accommodation.location,
+          accommodation.adress,
           accommodation.type,
           accommodation.price,
-          accommodation.rating,
           accommodation.web,
         ),
     );

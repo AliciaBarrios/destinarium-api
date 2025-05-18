@@ -1,5 +1,6 @@
 /*eslint-disable*/
 import { ApiProperty } from '@nestjs/swagger';
+import { AccommodationType } from './accommodation.entity';
 
 export class AccommodationDto {
     @ApiProperty()
@@ -9,27 +10,23 @@ export class AccommodationDto {
     readonly name: string;
   
     @ApiProperty()
-    readonly location: string;
+    readonly adress: string;
   
     @ApiProperty()
-    readonly type: string; // Hotel, Airbnb, Camping, etc.
+    readonly type: AccommodationType; // Hotel, Airbnb, Camping, etc.
 
     @ApiProperty()
     readonly price: number;
 
     @ApiProperty()
-    readonly rating: number;
-
-    @ApiProperty()
     readonly web?: string;
   
-    constructor(accommodationId: string, name: string, location: string, type: string, price: number, rating: number,  web?: string) {
+    constructor(accommodationId: string, name: string, adress: string, type: AccommodationType, price: number,  web?: string) {
       this.accommodationId = accommodationId;
       this.name = name;
-      this.location = location;
+      this.adress = adress;
       this.type = type;
       this.price = price;
-      this.rating = rating;
       this.web = web;
     }
 }

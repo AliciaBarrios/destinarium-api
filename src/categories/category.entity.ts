@@ -1,11 +1,4 @@
-// import { ItineraryEntity } from '../itineraries/itinerary.entity';
-import {
-  BaseEntity,
-  Column,
-  Entity,
-  // ManyToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('categories')
 export class CategoryEntity extends BaseEntity {
