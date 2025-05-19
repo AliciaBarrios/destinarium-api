@@ -25,8 +25,8 @@ export class AccommodationService {
     return this.mapper.entityToDto(accommodation);
   }
 
-  async getAccommodationByName(name: string): Promise<AccommodationEntity> {
-    return await this.accommodationRepository.getAccommodationByName(name);
+  async getAccommodationsByName(name: string): Promise<AccommodationEntity[]> {
+    return await this.accommodationRepository.getAccommodationsByName(name);
   }
 
   async accommodationNameAlreadyExist(

@@ -1,5 +1,5 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, Not, Repository } from 'typeorm';
+import { DeleteResult, Not, Repository, ILike } from 'typeorm';
 import { AccommodationDto } from './accommodation.dto';
 import { AccommodationEntity } from './accommodation.entity';
 import { AccommodationMapper } from './accommodation.mapper';
@@ -21,8 +21,12 @@ export class AccommodationRepository {
     });
   }
 
-  getAccommodationByName(name: string): Promise<AccommodationEntity> {
-    return this.accommodationRepository.findOne({ name });
+  getAccommodationsByName(name: string): Promise<AccommodationEntity[]> {
+    return this.accommodationRepository.find({
+      where: {
+        name: ILike(`%${name}%`),
+      },
+    });
   }
 
   accommodationNameAlreadyExist(

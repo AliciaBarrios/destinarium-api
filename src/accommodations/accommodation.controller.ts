@@ -33,8 +33,8 @@ export class AccommodationController {
   @Get('name/:name')
   async getAccommodationByName(
     @Param('name') name: string,
-  ): Promise<AccommodationDto> {
-    return await this.accommodationService.getAccommodationByName(name);
+  ): Promise<AccommodationDto[]> {
+    return await this.accommodationService.getAccommodationsByName(name);
   }
 
   @Post()
