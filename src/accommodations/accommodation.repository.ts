@@ -54,7 +54,7 @@ export class AccommodationRepository {
     const updateAccommodationDTO: AccommodationDto = new AccommodationDto(
       id,
       accommodationDTO.name,
-      accommodationDTO.adress,
+      accommodationDTO.address,
       accommodationDTO.type,
       accommodationDTO.price,
       accommodationDTO.web,

@@ -8,7 +8,7 @@ export class AccommodationMapper {
     return new AccommodationEntity(
       accommodationDTO.accommodationId,
       accommodationDTO.name,
-      accommodationDTO.adress,
+      accommodationDTO.address,
       accommodationDTO.type,
       accommodationDTO.price,
       accommodationDTO.web,
@@ -19,7 +19,7 @@ export class AccommodationMapper {
     return new AccommodationDto(
       accommodationEntity.accommodationId,
       accommodationEntity.name,
-      accommodationEntity.adress,
+      accommodationEntity.address,
       accommodationEntity.type,
       accommodationEntity.price,
       accommodationEntity.web,

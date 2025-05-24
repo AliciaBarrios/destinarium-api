@@ -1,14 +1,17 @@
 /*eslint-disable*/
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, getConnection, Repository } from 'typeorm';
+import { DeleteResult, getConnection, Repository, In } from 'typeorm';
 import { ItineraryDto } from './itinerary.dto';
 import { ItineraryEntity } from './itinerary.entity';
 import { ItineraryMapper } from './itinerary.mapper';
+import { AccommodationEntity } from 'src/accommodations/accommodation.entity';
 
 export class ItiinerariesRepository {
   constructor(
     @InjectRepository(ItineraryEntity)
     private itinerariesRepository: Repository<ItineraryEntity>,
+    @InjectRepository(AccommodationEntity)
+    private accommodationRepository: Repository<AccommodationEntity>,
     private mapper: ItineraryMapper,
   ) {}
 
@@ -148,9 +151,37 @@ export class ItiinerariesRepository {
       .where('itinerariesItineraryId = :itinerariesItineraryId', { itinerariesItineraryId: id })
       .execute();
 
-    // await this.itinerariesRepository.delete(id);
-
     return await this.itinerariesRepository.save(updateItinerary);
+  }
+
+  async addAccommodationsToItinerary(itineraryId: string, accommodationIds: string[]): Promise<ItineraryEntity> {
+    const itinerary = await this.itinerariesRepository.findOne({
+      where: { itineraryId },
+      relations: [
+        'user',
+        'categories',
+        'days',
+        'accommodations',
+        'transports',
+        'restaurants',
+      ],
+    });
+
+    if (!itinerary) {
+      throw new Error('Itinerary not found');
+    }
+
+    const accommodations = await this.accommodationRepository.find({
+      accommodationId: In(accommodationIds),
+    });
+
+    // Evitar duplicados: combinar alojamientos ya existentes con los nuevos
+    const existingIds = itinerary.accommodations?.map(accommodation => accommodation.accommodationId) || [];
+    const newAccommodations = accommodations.filter(accommodation => !existingIds.includes(accommodation.accommodationId));
+
+    itinerary.accommodations = [...(itinerary.accommodations || []), ...newAccommodations];
+
+    return await this.itinerariesRepository.save(itinerary);
   }
 
   deleteItinerary(id: string): Promise<DeleteResult> {

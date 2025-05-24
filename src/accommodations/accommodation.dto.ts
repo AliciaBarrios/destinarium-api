@@ -10,7 +10,7 @@ export class AccommodationDto {
     readonly name: string;
   
     @ApiProperty()
-    readonly adress: string;
+    readonly address: string;
   
     @ApiProperty()
     readonly type: AccommodationType; // Hotel, Airbnb, Camping, etc.
@@ -20,13 +20,17 @@ export class AccommodationDto {
 
     @ApiProperty()
     readonly web?: string;
+
+    @ApiProperty({ example: 'alojamiento', description: 'Tipo fijo del servicio' })
+    readonly serviceType: string = 'alojamiento';
   
-    constructor(accommodationId: string, name: string, adress: string, type: AccommodationType, price: number,  web?: string) {
+    constructor(accommodationId: string, name: string, address: string, type: AccommodationType, price: number,  web?: string) {
       this.accommodationId = accommodationId;
       this.name = name;
-      this.adress = adress;
+      this.address = address;
       this.type = type;
       this.price = price;
       this.web = web;
+      this.serviceType = 'alojamiento'; 
     }
 }

@@ -14,6 +14,6 @@ import { AccommodationController } from './accommodation.controller';
     AccommodationRepository,
     AccommodationService,
   ],
-  exports: [AccommodationService],
+  exports: [AccommodationService, TypeOrmModule],
 })
 export class AccommodationModule {}

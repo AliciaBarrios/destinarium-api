@@ -69,6 +69,11 @@ export class ItinerariesService {
     return this.mapper.entityToDto(updateItinerary);
   }
 
+  async addAccommodationsToItinerary(itineraryId: string, accommodationIds: string[]): Promise<ItineraryDto> {
+    const updatedItinerary = await this.itinerariesRepository.addAccommodationsToItinerary(itineraryId, accommodationIds);
+    return this.mapper.entityToDto(updatedItinerary);
+  }
+
   async deleteItinerary(id: string): Promise<DeleteResult> {
     const deleteResult: DeleteResult =
       await this.itinerariesRepository.deleteItinerary(id);

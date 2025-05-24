@@ -8,6 +8,10 @@ import { ItinerariesModule } from './itineraries/itineraries.module';
 import { UsersModule } from './users/users.module';
 import { DayModule } from './days/day.module';
 import { AccommodationModule } from './accommodations/accommodation.module';
+import { ConfigModule } from '@nestjs/config';
+import { HttpModule } from '@nestjs/axios';
+import { PlacesService } from './places/places.service';
+import { PlacesModule } from './places/places.module';
 
 @Module({
   imports: [
@@ -15,14 +19,19 @@ import { AccommodationModule } from './accommodations/accommodation.module';
       keepConnectionAlive: true,
       autoLoadEntities: true,
     }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    HttpModule,
     UsersModule,
     CategoriesModule,
     ItinerariesModule,
     AuthModule,
     DayModule,
     AccommodationModule,
+    PlacesModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, PlacesService],
 })
 export class AppModule {}

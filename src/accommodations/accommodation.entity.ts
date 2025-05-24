@@ -20,7 +20,7 @@ export class AccommodationEntity extends BaseEntity {
   name: string;
 
   @Column()
-  adress: string;
+  address: string;
 
   @Column({ type: 'enum', enum: AccommodationType })
   type: AccommodationType;
@@ -31,10 +31,13 @@ export class AccommodationEntity extends BaseEntity {
   @Column({ nullable: true })
   web?: string;
 
+  @Column({ default: 'alojamiento' })
+  readonly serviceType: string; 
+
   constructor(
     accommodationId: string,
     name: string,
-    adress: string,
+    address: string,
     type: AccommodationType,
     price: number,
     web: string | undefined,
@@ -42,9 +45,10 @@ export class AccommodationEntity extends BaseEntity {
     super();
     this.accommodationId = accommodationId;
     this.name = name;
-    this.adress = adress;
+    this.address = address;
     this.type = type;
     this.price = price;
     this.web = web;
+    this.serviceType = 'alojamiento';
   }
 }

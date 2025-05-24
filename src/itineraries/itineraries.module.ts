@@ -7,9 +7,13 @@ import { ItinerariesService } from './itineraries.service';
 import { ItiinerariesRepository } from './itineraries.repository';
 import { ItineraryMapper } from './itinerary.mapper';
 import { ImageService } from 'src/images/image.service';
+import { AccommodationModule } from 'src/accommodations/accommodation.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ItineraryEntity])],
+  imports: [
+    TypeOrmModule.forFeature([ItineraryEntity]), 
+    AccommodationModule,
+  ],
   controllers: [ItinerariesController],
   providers: [ItinerariesService, ItiinerariesRepository, ItineraryMapper, ImageService],
   exports: [ItinerariesService],

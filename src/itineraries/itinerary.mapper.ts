@@ -154,7 +154,7 @@ export class ItineraryMapper {
         new AccommodationDto(
           accommodation.accommodationId,
           accommodation.name,
-          accommodation.adress,
+          accommodation.address,
           accommodation.type,
           accommodation.price,
           accommodation.web,

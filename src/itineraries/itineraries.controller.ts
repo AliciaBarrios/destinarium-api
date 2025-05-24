@@ -94,6 +94,14 @@ export class ItinerariesController {
     return await this.itineraryService.updateItinerary(id, itinerary);
   }
 
+  @Post(':id/accommodations')
+  async addAccommodations(
+    @Param('id') id: string,
+    @Body() body: { accommodationIds: string[] },
+  ): Promise<ItineraryDto> {
+    return this.itineraryService.addAccommodationsToItinerary(id, body.accommodationIds);
+  }
+
   @Delete(':id')
   @ApiBearerAuth('access_token')
   @UseGuards(AuthGuard('jwt'))
