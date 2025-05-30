@@ -1,11 +1,10 @@
 /*eslint-disable*/
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, BaseEntity } from 'typeorm';
-import { ItineraryEntity } from 'src/itineraries/itinerary.entity';
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
 
 @Entity("restaurants")
 export class RestaurantEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-  restaurantId: string;
+  readonly restaurantId: string;
 
   @Column()
   name: string;
@@ -17,30 +16,29 @@ export class RestaurantEntity extends BaseEntity {
   price: number;
 
   @Column()
-  location: string;
-
-  @Column()
-  rating: number;
+  address: string;
 
   @Column({ nullable: true })
   web: string;
+
+  @Column({ default: 'restaurante' })
+  readonly serviceType: string; 
   
   constructor(
     restaurantId: string,
     name: string,
     type: string,
     price: number,
-    location: string,
-    rating: number,
-    web: string,
+    address: string,
+    web: string | undefined,
   ) {
     super();
     this.restaurantId = restaurantId;
     this.name = name;
     this.type = type;
     this.price = price,
-    this.location = location;
-    this.rating = rating;
+    this.address = address;
     this.web = web;
+    this.serviceType = 'restaurante';
   }
 }

@@ -26,6 +26,7 @@ export class DayMapper {
       entity.endLocation,
       entity.description,
       entity.dayNumber,
+      entity.itineraryId
     );
   }
 }

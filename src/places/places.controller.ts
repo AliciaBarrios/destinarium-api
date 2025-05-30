@@ -8,6 +8,6 @@ export class PlacesController {
 
   @Get('search')
   async search(@Query('query') query: string) {
-    return this.placesService.searchPlace(query);
+    return this.placesService.searchPlaces(query);
   }
 }

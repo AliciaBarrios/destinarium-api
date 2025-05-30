@@ -137,12 +137,10 @@ export class ItineraryMapper {
       (transport) =>
         new TransportDto(
           transport.transportId,
-          transport.company,
-          transport.rating,
-          transport.price,
-          transport.location,
-          transport.web,
           transport.type,
+          transport.company,
+          transport.address,
+          transport.web,
         ),
     );
   }
@@ -171,8 +169,7 @@ export class ItineraryMapper {
           restaurant.name,
           restaurant.type,
           restaurant.price,
-          restaurant.location,
-          restaurant.rating,
+          restaurant.address,
           restaurant.web,
         ),
     );

@@ -1,11 +1,11 @@
 /*eslint-disable*/
-
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { DeleteResult } from 'typeorm';
 import { ItineraryDto } from './itinerary.dto';
 import { ItiinerariesRepository } from './itineraries.repository';
 import { ItineraryEntity } from './itinerary.entity';
 import { ItineraryMapper } from './itinerary.mapper';
+import { FilterItineraryDto } from './filter-itinerary.dto';
 
 @Injectable()
 export class ItinerariesService {
@@ -30,25 +30,9 @@ export class ItinerariesService {
       await this.itinerariesRepository.getItinerariesByCategory(categoryId);
     return itineraries.map((itinerary) => this.mapper.entityToDto(itinerary));
   }
-  async findByDestination(
-    destination: string,
-  ): Promise<ItineraryDto[]> {
-    const itineraries: ItineraryEntity[] =
-      await this.itinerariesRepository.getItinerariesByDestination(destination);
-    return itineraries.map((itinerary) => this.mapper.entityToDto(itinerary));
-  }
 
-  async findByRating(rating: number): Promise<ItineraryDto[]> {
-    const itineraries: ItineraryEntity[] =
-      await this.itinerariesRepository.getItinerariesByRating(rating);
-    return itineraries.map((itinerary) => this.mapper.entityToDto(itinerary));
-  }
-
-  async findByDuration(
-    durationType: 'short' | 'medium' | 'long' | 'extended' | 'very_long',
-  ): Promise<ItineraryDto[]> {
-    const itineraries: ItineraryEntity[] =
-      await this.itinerariesRepository.getItinerariesByDuration(durationType);
+  async findWithFilters(filters: FilterItineraryDto): Promise<ItineraryDto[]> {
+    const itineraries = await this.itinerariesRepository.getItinerariesWithFilters(filters);
     return itineraries.map((itinerary) => this.mapper.entityToDto(itinerary));
   }
 
@@ -71,6 +55,16 @@ export class ItinerariesService {
 
   async addAccommodationsToItinerary(itineraryId: string, accommodationIds: string[]): Promise<ItineraryDto> {
     const updatedItinerary = await this.itinerariesRepository.addAccommodationsToItinerary(itineraryId, accommodationIds);
+    return this.mapper.entityToDto(updatedItinerary);
+  }
+
+  async addRestaurantsToItinerary(itineraryId: string, restaurantIds: string[]): Promise<ItineraryDto> {
+    const updatedItinerary = await this.itinerariesRepository.addRestaurantsToItinerary(itineraryId, restaurantIds);
+    return this.mapper.entityToDto(updatedItinerary);
+  }
+
+  async addTransportsToItinerary(itineraryId: string, transportIds: string[]): Promise<ItineraryDto> {
+    const updatedItinerary = await this.itinerariesRepository.addTransportsToItinerary(itineraryId, transportIds);
     return this.mapper.entityToDto(updatedItinerary);
   }
 

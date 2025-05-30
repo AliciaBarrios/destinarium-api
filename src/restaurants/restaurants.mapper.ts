@@ -11,8 +11,7 @@ export class RestaurantMapper {
       restaurantDto.name,
       restaurantDto.type,
       restaurantDto.price,
-      restaurantDto.location,
-      restaurantDto.rating,
+      restaurantDto.address,
       restaurantDto.web,
     );
   }
@@ -23,8 +22,7 @@ export class RestaurantMapper {
       restaurantEntity.name,
       restaurantEntity.type,
       restaurantEntity.price,
-      restaurantEntity.location,
-      restaurantEntity.rating,
+      restaurantEntity.address,
       restaurantEntity.web,
     );
   }

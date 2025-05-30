@@ -10,7 +10,8 @@ import {
   Put,
   UseGuards,
   UseInterceptors,
-  UploadedFile
+  UploadedFile,
+  Query
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth } from '@nestjs/swagger';
@@ -21,6 +22,7 @@ import { ValidItineraryIdPipe } from './pipes/valid-itinerary-id.pipe';
 import { ImageService } from 'src/images/image.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import { FilterItineraryDto } from './filter-itinerary.dto';
 
 @Controller('itineraries')
 export class ItinerariesController {
@@ -41,18 +43,9 @@ export class ItinerariesController {
     return await this.itineraryService.findByCategory(categoryId);
   }
 
-  @Get('destination/:destination')
-  async getItinerariesByDestination(
-    @Param('destination') destination: string
-  ): Promise<ItineraryDto[]> {
-    return await this.itineraryService.findByDestination(destination);
-  }
-
-  @Get('rating/:rating')
-  async getItinerariesByRating(
-    @Param('rating') rating: number
-  ): Promise<ItineraryDto[]> {
-    return await this.itineraryService.findByRating(Number(rating));
+  @Get('filter')
+  getFiltered(@Query() filters: FilterItineraryDto) {
+    return this.itineraryService.findWithFilters(filters);
   }
 
   @Get(':id')
@@ -102,10 +95,26 @@ export class ItinerariesController {
     return this.itineraryService.addAccommodationsToItinerary(id, body.accommodationIds);
   }
 
+  @Post(':id/restaurants')
+  async addRestaurants(
+    @Param('id') id: string,
+    @Body() body: { restaurantIds: string[] },
+  ): Promise<ItineraryDto> {
+    return this.itineraryService.addRestaurantsToItinerary(id, body.restaurantIds);
+  }
+
+  @Post(':id/transports')
+  async addTransports(
+    @Param('id') id: string,
+    @Body() body: { transportIds: string[] },
+  ): Promise<ItineraryDto> {
+    return this.itineraryService.addTransportsToItinerary(id, body.transportIds);
+  }
+
   @Delete(':id')
   @ApiBearerAuth('access_token')
   @UseGuards(AuthGuard('jwt'))
-  async deletePost(
+  async deleteItinerary(
     @Param('id', ValidItineraryIdPipe) id: string,
   ): Promise<DeleteResult> {
     return await this.itineraryService.deleteItinerary(id);

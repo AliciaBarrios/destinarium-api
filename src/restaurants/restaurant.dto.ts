@@ -15,21 +15,21 @@ export class RestaurantDto {
     readonly price: number;
   
     @ApiProperty()
-    readonly location: string;
-
-    @ApiProperty()
-    readonly rating: number;
+    readonly address: string;
 
     @ApiProperty()
     readonly web?: string;
+
+    @ApiProperty({ example: 'restaurante', description: 'Tipo fijo del servicio' })
+    readonly serviceType: string = 'restaurante';
   
-    constructor(restaurantId: string, name: string, type: string, price: number, location: string, rating: number, web: string) {
+    constructor(restaurantId: string, name: string, type: string, price: number, address: string, web: string) {
       this.restaurantId = restaurantId;
       this.name = name;
       this.type = type;
       this.price = price;
-      this.location = location;
-      this.rating = rating;
+      this.address = address;
       this.web = web;
+      this.serviceType = 'restaurante'; 
     }
   }

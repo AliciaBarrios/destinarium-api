@@ -11,19 +11,40 @@ export class PlacesService {
         private readonly configService: ConfigService,
     ) {}
 
-    async searchPlace(query: string) {
-        const url = 'https://maps.googleapis.com/maps/api/place/findplacefromtext/json';
+    async searchPlaces(query: string) {
+        const key = this.configService.get('GOOGLE_API_KEY');
+
+        const textSearchUrl = 'https://maps.googleapis.com/maps/api/place/textsearch/json';
         const params = {
-        input: query,
-        inputtype: 'textquery',
-        fields: 'place_id,name,formatted_address,geometry',
-        key: this.configService.get('GOOGLE_API_KEY'),
+            query,
+            key,
         };
 
         const response = await firstValueFrom(
-        this.httpService.get(url, { params })
+            this.httpService.get(textSearchUrl, { params })
         );
 
-        return response.data;
+        const results = response.data.results;
+
+        return results.map(place => {
+            const photos = (place.photos || []).map(
+                (p) => this.getPhotoUrl(p.photo_reference, 400)
+            );
+
+            return {
+                name: place.name,
+                address: place.formatted_address,
+                rating: place.rating,
+                types: place.types,
+                photos,
+                place_id: place.place_id,
+                location: place.geometry?.location,
+            };
+        });
+    }
+
+    getPhotoUrl(photoReference: string, maxWidth = 400): string {
+        const key = this.configService.get('GOOGLE_API_KEY');
+        return `https://maps.googleapis.com/maps/api/place/photo?maxwidth=${maxWidth}&photoreference=${photoReference}&key=${key}`;
     }
 }

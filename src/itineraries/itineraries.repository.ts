@@ -5,11 +5,18 @@ import { ItineraryDto } from './itinerary.dto';
 import { ItineraryEntity } from './itinerary.entity';
 import { ItineraryMapper } from './itinerary.mapper';
 import { AccommodationEntity } from 'src/accommodations/accommodation.entity';
+import { TransportEntity } from 'src/transports/transport.entity';
+import { RestaurantEntity } from 'src/restaurants/restaurant.entity';
+import { FilterItineraryDto } from './filter-itinerary.dto';
 
 export class ItiinerariesRepository {
   constructor(
     @InjectRepository(ItineraryEntity)
     private itinerariesRepository: Repository<ItineraryEntity>,
+    @InjectRepository(RestaurantEntity)
+    private restaurantRepository: Repository<RestaurantEntity>,
+    @InjectRepository(TransportEntity)
+    private transportRepository: Repository<TransportEntity>,
     @InjectRepository(AccommodationEntity)
     private accommodationRepository: Repository<AccommodationEntity>,
     private mapper: ItineraryMapper,
@@ -56,58 +63,39 @@ export class ItiinerariesRepository {
       .getMany();
   }
 
-  getItinerariesByDestination(destination: string): Promise<ItineraryEntity[]> {
-    return this.itinerariesRepository.find({
-      where: { destination },
-      relations: ['categories', 'days'],
-    });
-  }
-
-  async getItinerariesByRating(rating: number): Promise<ItineraryEntity[]> {
-    return this.itinerariesRepository.find({
-      where: { rating: rating },
-      relations: ['user', 'categories', 'days'],
-    });
-  }
-
-  async getItinerariesByDuration(
-    durationType: 'short' | 'medium' | 'long' | 'extended' | 'very_long',
-  ): Promise<ItineraryEntity[]> {
+  async getItinerariesWithFilters(filters: FilterItineraryDto): Promise<ItineraryEntity[]> {
     const query = this.itinerariesRepository
       .createQueryBuilder('itinerary')
       .leftJoinAndSelect('itinerary.user', 'user')
-      .leftJoinAndSelect('itinerary.categories', 'categories')
+      .leftJoinAndSelect('itinerary.categories', 'category')
       .leftJoinAndSelect('itinerary.days', 'days');
 
-    switch (durationType) {
-      case 'short':
-        query.where('itinerary.num_days < :max', { max: 7 });
-        break;
-      case 'medium':
-        query.where('itinerary.num_days BETWEEN :min AND :max', {
-          min: 7,
-          max: 14,
-        });
-        break;
-      case 'long':
-        query.where('itinerary.num_days BETWEEN :min AND :max', {
-          min: 15,
-          max: 21,
-        });
-        break;
-      case 'extended':
-        query.where('itinerary.num_days BETWEEN :min AND :max', {
-          min: 22,
-          max: 30,
-        });
-        break;
-      case 'very_long':
-        query.where('itinerary.num_days > :min', { min: 30 });
-        break;
-      default:
-        return this.itinerariesRepository.find({
-          relations: ['user', 'categories', 'days'],
-        });
+    if (filters.destination) {
+      query.andWhere('LOWER(itinerary.destination) LIKE LOWER(:destination)', {
+        destination: `%${filters.destination}%`,
+      });
+    }
+
+    if (filters.minRating !== undefined) {
+      query.andWhere('itinerary.rating >= :minRating', { minRating: filters.minRating });
+    }
+
+    if (filters.maxRating !== undefined) {
+      query.andWhere('itinerary.rating <= :maxRating', { maxRating: filters.maxRating });
+    }
+
+    if (filters.minDuration !== undefined) {
+      query.andWhere('itinerary.num_days >= :minDuration', { minDuration: filters.minDuration });
+    }
+
+    if (filters.maxDuration !== undefined) {
+      query.andWhere('itinerary.num_days <= :maxDuration', { maxDuration: filters.maxDuration });
+    }
+
+    if (filters.categories && filters.categories.length > 0) {
+      query.andWhere('category.title IN (:...categories)', {
+        categories: filters.categories,
+      });
     }
 
     return query.getMany();
@@ -180,6 +168,66 @@ export class ItiinerariesRepository {
     const newAccommodations = accommodations.filter(accommodation => !existingIds.includes(accommodation.accommodationId));
 
     itinerary.accommodations = [...(itinerary.accommodations || []), ...newAccommodations];
+
+    return await this.itinerariesRepository.save(itinerary);
+  }
+
+   async addRestaurantsToItinerary(itineraryId: string, restaurantIds: string[]): Promise<ItineraryEntity> {
+    const itinerary = await this.itinerariesRepository.findOne({
+      where: { itineraryId },
+      relations: [
+        'user',
+        'categories',
+        'days',
+        'accommodations',
+        'transports',
+        'restaurants',
+      ],
+    });
+
+    if (!itinerary) {
+      throw new Error('Itinerary not found');
+    }
+
+    const restaurants = await this.restaurantRepository.find({
+      where: { restaurantId: In(restaurantIds) },
+    });
+
+    // Evitar duplicados: combinar restaurantes ya existentes con los nuevos
+    const existingIds = itinerary.restaurants?.map(restaurant => restaurant.restaurantId) || [];
+    const newRestaurants = restaurants.filter(restaurant => !existingIds.includes(restaurant.restaurantId));
+
+    itinerary.restaurants = [...(itinerary.restaurants || []), ...newRestaurants];
+
+    return await this.itinerariesRepository.save(itinerary);
+  }
+
+   async addTransportsToItinerary(itineraryId: string, transportIds: string[]): Promise<ItineraryEntity> {
+    const itinerary = await this.itinerariesRepository.findOne({
+      where: { itineraryId },
+      relations: [
+        'user',
+        'categories',
+        'days',
+        'accommodations',
+        'transports',
+        'restaurants',
+      ],
+    });
+
+    if (!itinerary) {
+      throw new Error('Itinerary not found');
+    }
+
+    const transports = await this.transportRepository.find({
+      where: { transportId: In(transportIds) },
+    });
+
+    // Evitar duplicados: combinar transportes ya existentes con los nuevos
+    const existingIds = itinerary.transports?.map(transport => transport.transportId) || [];
+    const newTransports = transports.filter(transport => !existingIds.includes(transport.transportId));
+
+    itinerary.transports = [...(itinerary.transports || []), ...newTransports];
 
     return await this.itinerariesRepository.save(itinerary);
   }

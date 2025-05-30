@@ -1,6 +1,5 @@
 /*eslint-disable*/
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToMany } from 'typeorm';
-import { ItineraryEntity } from 'src/itineraries/itinerary.entity';
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 export enum TransportType {
     PLANE = 'Avión',
@@ -16,42 +15,36 @@ export enum TransportType {
 @Entity("transports")
 export class TransportEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-  transportId: string;
+  readonly transportId: string;
 
   @Column({ type: 'enum', enum: TransportType })
-  type: TransportType; // Avión, Tren, Coche, etc.
+  type: TransportType;
 
   @Column({ nullable: true })
   company?: string;
 
-  @Column({ type: 'decimal' })
-  rating: number;
-
-  @Column({ type: 'decimal' })
-  price: number;
-
   @Column()
-  location: string;
+  address: string;
 
   @Column({ nullable: true })
   web?: string;
+
+  @Column({ default: 'transporte' })
+  readonly serviceType: string; 
 
   constructor(
     transportId: string,
     type: TransportType,
     company: string | undefined,
-    rating: number,
-    price: number,
-    location: string,
+    address: string,
     web: string | undefined,
   ) {
     super();
     this.transportId = transportId;
     this.type = type;
     this.company = company;
-    this.rating = rating;
-    this.price = price;
-    this.location = location;
+    this.address = address;
     this.web = web;
+    this.serviceType = 'transporte';
   }
 }
