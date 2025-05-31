@@ -32,7 +32,7 @@ async function bootstrap() {
   app.use(json({ limit: '10mb' }));
   app.use('/uploads', express.static(join(process.cwd(), 'uploads')));
   app.enableCors({
-    origin: 'http://localhost:4200',
+    origin: 'https://destinarium.netlify.app',
     credentials: true,
   });
 
@@ -46,6 +46,7 @@ async function bootstrap() {
     },
   });
 
-  await app.listen(3000);
+  const port = process.env.PORT || 3000;
+  await app.listen(port);
 }
 bootstrap();
