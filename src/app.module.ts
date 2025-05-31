@@ -17,10 +17,10 @@ import { PlacesModule } from './places/places.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      keepConnectionAlive: true,
-      autoLoadEntities: true,
-    }),
+    // TypeOrmModule.forRoot({
+    //   keepConnectionAlive: true,
+    //   autoLoadEntities: true,
+    // }),
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
