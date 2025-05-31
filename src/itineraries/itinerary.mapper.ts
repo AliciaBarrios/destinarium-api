@@ -126,6 +126,7 @@ export class ItineraryMapper {
           day.startLocation,
           day.endLocation,
           day.description,
+          day.dayNumber,
         ),
     );
   }

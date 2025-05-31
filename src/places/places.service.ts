@@ -42,6 +42,36 @@ export class PlacesService {
             };
         });
     }
+    async getCoordinates(place: string): Promise<{ lat: number; lng: number }> {
+        const key = this.configService.get('GOOGLE_API_KEY');
+
+        const url = 'https://maps.googleapis.com/maps/api/place/findplacefromtext/json';
+        const params = {
+            input: place,
+            inputtype: 'textquery',
+            fields: 'geometry',
+            key,
+        };
+
+        const response = await firstValueFrom(
+            this.httpService.get(url, { params })
+        );
+
+        const candidates = response.data.candidates;
+
+        if (candidates && candidates.length > 0) {
+            const location = candidates[0].geometry.location;
+            return { lat: location.lat, lng: location.lng };
+        } else {
+            throw new Error('No se encontró el lugar');
+        }
+    }
+
+    getGoogleMapsApiUrl(): { url: string } {
+        const apiKey = this.configService.get('GOOGLE_API_KEY');
+        const url = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
+        return { url };
+    }
 
     getPhotoUrl(photoReference: string, maxWidth = 400): string {
         const key = this.configService.get('GOOGLE_API_KEY');

@@ -20,6 +20,6 @@ import { RestaurantModule } from 'src/restaurants/restaurant.module';
   ],
   controllers: [ItinerariesController],
   providers: [ItinerariesService, ItiinerariesRepository, ItineraryMapper, ImageService],
-  exports: [ItinerariesService],
+  exports: [ItinerariesService, TypeOrmModule],
 })
 export class ItinerariesModule {}

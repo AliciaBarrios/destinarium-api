@@ -10,4 +10,14 @@ export class PlacesController {
   async search(@Query('query') query: string) {
     return this.placesService.searchPlaces(query);
   }
+
+  @Get('coordinates')
+  async getCoordinates(@Query('place') place: string) {
+    return this.placesService.getCoordinates(place);
+  }
+
+  @Get('api-url')
+  getMapsApiUrl() {
+    return this.placesService.getGoogleMapsApiUrl();
+  }
 }

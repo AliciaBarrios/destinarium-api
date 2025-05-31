@@ -1,4 +1,5 @@
 /*eslint-disable*/
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, getConnection, Repository, In } from 'typeorm';
 import { ItineraryDto } from './itinerary.dto';
@@ -8,7 +9,7 @@ import { AccommodationEntity } from 'src/accommodations/accommodation.entity';
 import { TransportEntity } from 'src/transports/transport.entity';
 import { RestaurantEntity } from 'src/restaurants/restaurant.entity';
 import { FilterItineraryDto } from './filter-itinerary.dto';
-
+@Injectable()
 export class ItiinerariesRepository {
   constructor(
     @InjectRepository(ItineraryEntity)
@@ -128,10 +129,10 @@ export class ItiinerariesRepository {
       itineraryDto.accommodations,
       itineraryDto.restaurants,
       itineraryDto.categories,
-      itineraryDto.days,
+      [],
     );
     const updateItinerary = await this.mapper.dtoToEntity(updateItineraryDto);
-   
+   (updateItinerary as any).days = undefined;
     await getConnection()
       .createQueryBuilder()
       .update('itineraries_categories_categories')
