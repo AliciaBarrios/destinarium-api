@@ -167,10 +167,11 @@ export class ItiinerariesRepository {
     });
 
     // Evitar duplicados: combinar alojamientos ya existentes con los nuevos
-    const existingIds = itinerary.accommodations?.map(accommodation => accommodation.accommodationId) || [];
-    const newAccommodations = accommodations.filter(accommodation => !existingIds.includes(accommodation.accommodationId));
+    // const existingIds = itinerary.accommodations?.map(accommodation => accommodation.accommodationId) || [];
+    // const newAccommodations = accommodations.filter(accommodation => !existingIds.includes(accommodation.accommodationId));
 
-    itinerary.accommodations = [...(itinerary.accommodations || []), ...newAccommodations];
+    // itinerary.accommodations = [...(itinerary.accommodations || []), ...newAccommodations];
+    itinerary.accommodations = accommodations;
 
     return await this.itinerariesRepository.save(itinerary);
   }
@@ -199,10 +200,11 @@ export class ItiinerariesRepository {
     });
 
     // Evitar duplicados: combinar restaurantes ya existentes con los nuevos
-    const existingIds = itinerary.restaurants?.map(restaurant => restaurant.restaurantId) || [];
-    const newRestaurants = restaurants.filter(restaurant => !existingIds.includes(restaurant.restaurantId));
+    // const existingIds = itinerary.restaurants?.map(restaurant => restaurant.restaurantId) || [];
+    // const newRestaurants = restaurants.filter(restaurant => !existingIds.includes(restaurant.restaurantId));
 
-    itinerary.restaurants = [...(itinerary.restaurants || []), ...newRestaurants];
+    // itinerary.restaurants = [...(itinerary.restaurants || []), ...newRestaurants];
+    itinerary.restaurants = restaurants;
 
     return await this.itinerariesRepository.save(itinerary);
   }
@@ -231,10 +233,11 @@ export class ItiinerariesRepository {
     });
 
     // Evitar duplicados: combinar transportes ya existentes con los nuevos
-    const existingIds = itinerary.transports?.map(transport => transport.transportId) || [];
-    const newTransports = transports.filter(transport => !existingIds.includes(transport.transportId));
+    // const existingIds = itinerary.transports?.map(transport => transport.transportId) || [];
+    // const newTransports = transports.filter(transport => !existingIds.includes(transport.transportId));
 
-    itinerary.transports = [...(itinerary.transports || []), ...newTransports];
+    // itinerary.transports = [...(itinerary.transports || []), ...newTransports];
+    itinerary.transports = transports;
 
     return await this.itinerariesRepository.save(itinerary);
   }
