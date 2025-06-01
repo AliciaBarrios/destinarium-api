@@ -149,7 +149,7 @@ export class ItiinerariesRepository {
       relations: [
         'user',
         'categories',
-        'days',
+        // 'days',
         'accommodations',
         'transports',
         'restaurants',
@@ -161,7 +161,9 @@ export class ItiinerariesRepository {
     }
 
     const accommodations = await this.accommodationRepository.find({
-      accommodationId: In(accommodationIds),
+      where: {
+        accommodationId: In(accommodationIds),
+      },
     });
 
     // Evitar duplicados: combinar alojamientos ya existentes con los nuevos
