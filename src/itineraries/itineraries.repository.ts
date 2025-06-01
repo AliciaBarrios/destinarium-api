@@ -181,7 +181,7 @@ export class ItiinerariesRepository {
       relations: [
         'user',
         'categories',
-        'days',
+        // 'days',
         'accommodations',
         'transports',
         'restaurants',
@@ -193,7 +193,9 @@ export class ItiinerariesRepository {
     }
 
     const restaurants = await this.restaurantRepository.find({
-      where: { restaurantId: In(restaurantIds) },
+      where: { 
+        restaurantId: In(restaurantIds) 
+      },
     });
 
     // Evitar duplicados: combinar restaurantes ya existentes con los nuevos
@@ -211,7 +213,7 @@ export class ItiinerariesRepository {
       relations: [
         'user',
         'categories',
-        'days',
+        // 'days',
         'accommodations',
         'transports',
         'restaurants',
@@ -223,7 +225,9 @@ export class ItiinerariesRepository {
     }
 
     const transports = await this.transportRepository.find({
-      where: { transportId: In(transportIds) },
+      where: { 
+        transportId: In(transportIds) 
+      },
     });
 
     // Evitar duplicados: combinar transportes ya existentes con los nuevos
